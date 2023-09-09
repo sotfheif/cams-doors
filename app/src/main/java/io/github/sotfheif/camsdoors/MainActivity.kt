@@ -1,8 +1,12 @@
-@file:OptIn(ExperimentalFoundationApi::class, ExperimentalFoundationApi::class)
+@file:OptIn(
+    ExperimentalFoundationApi::class, ExperimentalFoundationApi::class,
+    ExperimentalFoundationApi::class
+)
 
 package io.github.sotfheif.camsdoors
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -22,10 +26,20 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.github.sotfheif.camsdoors.ui.theme.CamsdoorsTheme
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.engine.cio.CIO
+import io.ktor.client.request.get
+import io.ktor.client.statement.HttpResponse
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        req()
+
         setContent {
             CamsdoorsTheme {
                 // A surface container using the 'background' color from the theme
@@ -38,6 +52,7 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+
     }
 }
 
@@ -140,6 +155,16 @@ Row{
 }
 }
 */
+
+fun req() {
+    val scope = CoroutineScope(Dispatchers.Main)
+    val client = HttpClient(CIO)
+    scope.launch {
+        val response: HttpResponse = client.get("http://cars.cprogroup.ru/api/rubetek/cameras/")
+        Log.d("MainActivity", response.body())
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
