@@ -3,7 +3,7 @@ package io.github.sotfheif.camsdoors.data
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class CamsResponse(
+data class DoorsResponse(
     val success: Boolean,
-    val data: CamsResponseData
-)
+    val data: List<Door>
+    )

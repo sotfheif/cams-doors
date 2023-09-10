@@ -25,6 +25,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import io.github.sotfheif.camsdoors.data.CamsDoorsRepository
+import io.github.sotfheif.camsdoors.data.NetworkCamsDoorsRepository
 import io.github.sotfheif.camsdoors.ui.theme.CamsdoorsTheme
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -38,7 +40,9 @@ import kotlinx.coroutines.launch
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        req()
+        val app = (application as CamsDoorsApplication)
+        val camsDoorsRepository = app.container.camsDoorsRepository
+        req(camsDoorsRepository)
 
         setContent {
             CamsdoorsTheme {
@@ -156,12 +160,10 @@ Row{
 }
 */
 
-fun req() {
+fun req(camsDoorsRepository: CamsDoorsRepository) {
     val scope = CoroutineScope(Dispatchers.Main)
-    val client = HttpClient(CIO)
     scope.launch {
-        val response: HttpResponse = client.get("http://cars.cprogroup.ru/api/rubetek/cameras/")
-        Log.d("MainActivity", response.body())
+        camsDoorsRepository.getCamsDoors()
     }
 }
 
@@ -175,7 +177,7 @@ fun GreetingPreview() {
 
 @Preview(showBackground = true)
 @Composable
-fun doorItemPreview() {
+fun DoorItemPreview() {
     CamsdoorsTheme {
         doorItem()
     }
