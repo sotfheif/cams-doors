@@ -18,11 +18,12 @@ private val DarkColorScheme = darkColorScheme(
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
+    primary = Blue40,
     secondary = PurpleGrey40,
     tertiary = Pink40,
     background = LightGrey,
     surface = White,
+    onPrimary = Black,
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),
@@ -57,8 +58,22 @@ fun CamsdoorsTheme(
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-            window.statusBarColor = colorScheme.primary.toArgb()
-            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
+            window.statusBarColor = White.toArgb()
+            //window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+
+            /*
+                        if (android.os.Build.VERSION.SDK_INT >= 29) {
+                            window.isStatusBarContrastEnforced = true
+                        } else {
+                            WindowCompat.getInsetsController(
+                                window,
+                                window.decorView
+                            ).isAppearanceLightStatusBars = true
+                        }
+            */
+            window.navigationBarColor = colorScheme.background.toArgb()
+            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars =
+                true//darkTheme
         }
     }
 

@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -43,6 +44,7 @@ import androidx.lifecycle.ViewModelProvider
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import io.github.sotfheif.camsdoors.data.CamsDoorsRepository
+import io.github.sotfheif.camsdoors.ui.theme.Black
 import io.github.sotfheif.camsdoors.ui.theme.CamsdoorsTheme
 import io.github.sotfheif.camsdoors.ui.theme.Grey20
 import io.github.sotfheif.camsdoors.ui.theme.Grey50
@@ -112,7 +114,7 @@ fun DoorItem() {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(10.dp)
+            //.padding(10.dp)
         ) {
             Column(
                 verticalArrangement = Arrangement.spacedBy(7.dp),
@@ -139,7 +141,7 @@ fun DoorItem() {
                             Text(
                                 text = "doorIt",
                                 color = Grey20,
-                                fontSize = 12.sp,
+                                fontSize = 14.sp,
                                 //.modifier = Modifier
                                 //.wrapContentSize(unbounded = true),
                             )
@@ -183,7 +185,10 @@ fun Scr(viewModel: MainViewModel) {
         val pagerState = rememberPagerState()
         val tabTexts = arrayOf("Камеры", "Двери")
 
-        TabRow(selectedTabIndex = activeTab.value ?: 0) {
+        TabRow(
+            selectedTabIndex = activeTab.value ?: 0,
+            //indicator =
+        ) {
             tabTexts.forEachIndexed { index, name ->
                 Tab(
                     selected = activeTab.value == index,
@@ -192,32 +197,11 @@ fun Scr(viewModel: MainViewModel) {
                         coroutineScope.launch { pagerState.animateScrollToPage(index) }
                     },
                     content = {
-                        Text(text = name)
-                    }
+                        Text(text = name, color = Black)
+                    },
+                    selectedContentColor = Black
                 )
             }
-            /*
-            Tab(
-                selected = activeTab.value == 0,
-                onClick = {
-                    viewModel.switchTab(0);
-                    coroutineScope.launch { pagerState.animateScrollToPage(0) }
-                },
-                content = {
-                    Text(text = "Камеры")
-                }
-            )
-            Tab(
-                selected = activeTab.value == 1,
-                onClick = {
-                    viewModel.switchTab(1);
-                    coroutineScope.launch { pagerState.animateScrollToPage(1) }
-                },
-                content = {
-                    Text(text = "Двери")
-                })
-
-             */
         }
 
         HorizontalPager(
@@ -228,7 +212,7 @@ fun Scr(viewModel: MainViewModel) {
         ) { page ->
             if (page == 0) {
                 CamItem()
-            } else {
+            } else if (page == 1) {
                 DoorItem()
             }
         }
@@ -265,13 +249,28 @@ fun ItemImage(url: String) {
 
 @Composable
 fun ItemImageTest(th: String = "") {
-    Image(
-        painter = painterResource(R.drawable.test_img_2),
-        contentDescription = null,
-        contentScale = ContentScale.FillWidth,
-        modifier = Modifier.fillMaxWidth(),
-        //.size(40.dp)
-    )
+    Box {
+        Image(
+            painter = painterResource(R.drawable.test_img_2),
+            contentDescription = null,
+            contentScale = ContentScale.FillWidth,
+            modifier = Modifier.fillMaxWidth(),
+            //.size(40.dp)
+        )
+        Image(
+            painter = painterResource(R.drawable.play_button),
+            contentDescription = null,
+            modifier = Modifier.align(Alignment.Center)
+                .size(70.dp),
+        )
+        Image(
+            painter = painterResource(R.drawable.filled_star),
+            contentDescription = null,
+            modifier = Modifier.align(Alignment.TopEnd)
+                .padding(4.dp)
+                .size(28.dp),
+        )
+    }
 }
 
 fun req(camsDoorsRepository: CamsDoorsRepository) {
@@ -287,6 +286,8 @@ fun LockImage(isLocked: Boolean = false) {
     Image(
         painter = painterResource(res),
         contentDescription = null,
+        modifier = Modifier.size(45.dp)
+            .padding(horizontal = 10.dp)
     )
 }
 
