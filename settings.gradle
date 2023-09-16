@@ -14,3 +14,9 @@ dependencyResolutionManagement {
 }
 rootProject.name = "camsdoors"
 include ':app'
+
+includeBuild("libraries") {
+    dependencySubstitution {
+        substitute(module("me.omico.lux:lux-androidx-compose-material3-pullrefresh")).using(project(":library"))
+    }
+}
