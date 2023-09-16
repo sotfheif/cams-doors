@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -86,7 +87,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             CamsdoorsTheme {
-                // NO SCROLL, mb better use scaffold
+                // mb better use scaffold
                 Column {
                     CenterAlignedTopAppBar()
                     PlaceOnSurface { Scr(viewModel) }
@@ -96,7 +97,7 @@ class MainActivity : ComponentActivity() {
                 /*
                 val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
 
-                Scaffold(NO SCROLL
+                Scaffold(
                     modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
 
                     topBar = {
@@ -289,12 +290,10 @@ fun Scr(viewModel: MainViewModel) {
             if (page == 0) {
                 CamItem()
             } else if (page == 1) {
-                Column {
-                    DoorItem()
-                    DoorItem()
-                    DoorItem()
-                    DoorItem()
-                    DoorItem()
+                LazyColumn {
+                    items(6) {
+                        DoorItem()
+                    }
                 }
             }
         }
