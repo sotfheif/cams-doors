@@ -1,3 +1,8 @@
+//TODO UNABLE TO SCROLL
+//todo add elevation or shadow to tabrow indicator
+//todo review markup (like paddings)
+
+
 @file:OptIn(
     ExperimentalFoundationApi::class,
     ExperimentalFoundationApi::class,
@@ -22,11 +27,14 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
@@ -46,8 +54,10 @@ import coil.request.ImageRequest
 import io.github.sotfheif.camsdoors.data.CamsDoorsRepository
 import io.github.sotfheif.camsdoors.ui.theme.Black
 import io.github.sotfheif.camsdoors.ui.theme.CamsdoorsTheme
+import io.github.sotfheif.camsdoors.ui.theme.Grey10
 import io.github.sotfheif.camsdoors.ui.theme.Grey20
 import io.github.sotfheif.camsdoors.ui.theme.Grey50
+import io.github.sotfheif.camsdoors.ui.theme.LightGrey
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -64,6 +74,7 @@ class MainActivity : ComponentActivity() {
     private lateinit var viewModel: MainViewModel
 
 
+    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val app = (application as CamsDoorsApplication)
@@ -75,17 +86,77 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             CamsdoorsTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    Scr(viewModel)
-                    //Greeting("Android")
+                // NO SCROLL, mb better use scaffold
+                Column {
+                    CenterAlignedTopAppBar()
+                    PlaceOnSurface { Scr(viewModel) }
                 }
+
+                //CenterAlignedTopAppBar({ PlaceOnSurface{ Scr(viewModel) } })
+                /*
+                val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
+
+                Scaffold(NO SCROLL
+                    modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+
+                    topBar = {
+                        CenterAlignedTopAppBar(
+                            colors = TopAppBarDefaults.smallTopAppBarColors(
+                                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                                titleContentColor = MaterialTheme.colorScheme.primary,
+                            ),
+                            title = {
+                                Text(
+                                    "Мой дом",
+                                    maxLines = 1,
+                                    //overflow = TextOverflow.Ellipsis
+                                )
+                            },
+                            scrollBehavior = scrollBehavior,
+                        )
+                    },
+                ) { innerPadding ->
+                    Box(modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(innerPadding)) {
+                        PlaceOnSurface { Scr(viewModel) }
+                    }
+                }
+
+ */
             }
         }
     }
+}
+
+@Composable
+fun PlaceOnSurface(content: @Composable () -> Unit) {
+// A surface container using the 'background' color from the theme
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = MaterialTheme.colorScheme.background
+    ) {
+        content()
+        //Greeting("Android")
+    }
+}
+
+
+@Composable
+@OptIn(ExperimentalMaterial3Api::class)
+fun CenterAlignedTopAppBar() {
+    CenterAlignedTopAppBar(
+        colors = TopAppBarDefaults.smallTopAppBarColors(
+            containerColor = LightGrey,
+            titleContentColor = Grey10,
+        ),
+        title = {
+            Text(
+                "Мой дом",
+                maxLines = 1,
+            )
+        },
+    )
 }
 
 @Composable
@@ -109,7 +180,9 @@ fun CamItem() {
 fun DoorItem() {
     Surface(
         shape = RoundedCornerShape(16.dp),
-        color = Color.White
+        color = Color.White,
+        modifier = Modifier
+            .padding(horizontal = 12.dp, vertical = 4.dp)
     ) {
         Column(
             modifier = Modifier
@@ -187,19 +260,22 @@ fun Scr(viewModel: MainViewModel) {
 
         TabRow(
             selectedTabIndex = activeTab.value ?: 0,
+            containerColor = LightGrey
             //indicator =
         ) {
             tabTexts.forEachIndexed { index, name ->
                 Tab(
                     selected = activeTab.value == index,
                     onClick = {
-                        viewModel.switchTab(index);
+                        viewModel.switchTab(index)
                         coroutineScope.launch { pagerState.animateScrollToPage(index) }
                     },
                     content = {
                         Text(text = name, color = Black)
                     },
-                    selectedContentColor = Black
+                    selectedContentColor = Black,
+                    modifier = Modifier//.height(30.dp)
+                        .padding(vertical = 10.dp)
                 )
             }
         }
@@ -213,7 +289,13 @@ fun Scr(viewModel: MainViewModel) {
             if (page == 0) {
                 CamItem()
             } else if (page == 1) {
-                DoorItem()
+                Column {
+                    DoorItem()
+                    DoorItem()
+                    DoorItem()
+                    DoorItem()
+                    DoorItem()
+                }
             }
         }
 

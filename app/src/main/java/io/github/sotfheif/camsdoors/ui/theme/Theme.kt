@@ -58,7 +58,7 @@ fun CamsdoorsTheme(
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-            window.statusBarColor = White.toArgb()
+            window.statusBarColor = LightGrey.toArgb()
             //window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
 
             /*
