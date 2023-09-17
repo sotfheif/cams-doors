@@ -1,7 +1,6 @@
 package io.github.sotfheif.camsdoors.compose
 
 import android.annotation.SuppressLint
-import androidx.compose.animation.animateColor
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,8 +18,8 @@ import androidx.compose.ui.input.pointer.positionChange
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import io.github.sotfheif.camsdoors.DoorItem
 import io.github.sotfheif.camsdoors.data.CardDb
-import io.github.sotfheif.camsdoors.ui.theme.LightGrey
 import kotlin.math.roundToInt
 
 const val ANIMATION_DURATION = 500
@@ -97,7 +96,6 @@ fun DraggableCardComplex(
 @Composable
 fun DraggableCard(
     card: CardDb,
-    cardHeight: Dp,
     isRevealed: Boolean,
     cardOffset: Float,
     onExpand: () -> Unit,
@@ -109,30 +107,19 @@ fun DraggableCard(
         }
     }
     val transition = updateTransition(transitionState, "cardTransition")
-    val cardBgColor by transition.animateColor(
-        label = "cardBgColorTransition",
-        transitionSpec = { tween(durationMillis = ANIMATION_DURATION) },
-        targetValueByState = {
-            LightGrey
-        }
-    )
+
     val offsetTransition by transition.animateFloat(
         label = "cardOffsetTransition",
         transitionSpec = { tween(durationMillis = ANIMATION_DURATION) },
         targetValueByState = { if (isRevealed) cardOffset else 0f },
 
         )
-    val cardElevation by transition.animateDp(
-        label = "cardElevation",
-        transitionSpec = { tween(durationMillis = ANIMATION_DURATION) },
-        targetValueByState = { if (isRevealed) 40.dp else 2.dp }
-    )
+
 
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp)
-            .height(cardHeight)
             .offset { IntOffset(offsetTransition.roundToInt(), 0) }
             .pointerInput(Unit) {
                 detectHorizontalDragGestures { _, dragAmount ->
@@ -146,6 +133,6 @@ fun DraggableCard(
         shape = remember {
             RoundedCornerShape(0.dp)
         },
-        content = { Text(text = card.id.toString()) }
+        content = { DoorItem()/* Text(text = card.id.toString()) */ }
     )
 }

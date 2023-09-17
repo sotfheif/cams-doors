@@ -23,7 +23,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -36,6 +35,8 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.pullrefresh.PullRefreshIndicator
+import androidx.compose.material3.pullrefresh.pullRefresh
 import androidx.compose.material3.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -58,7 +59,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModelProvider
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import io.github.sotfheif.camsdoors.compose.CardsScreen
+import io.github.sotfheif.camsdoors.compose.DraggableCardsColumn
 import io.github.sotfheif.camsdoors.data.CamsDoorsRepository
 import io.github.sotfheif.camsdoors.ui.theme.Black
 import io.github.sotfheif.camsdoors.ui.theme.CamsdoorsTheme
@@ -109,7 +110,7 @@ class MainActivity : ComponentActivity() {
 
                 val state = rememberPullRefreshState(refreshing, ::refresh)
 
-                CardsScreen(viewModel)
+                //DraggableCardsColumn(viewModel)
 
                 /*
                 Box(Modifier.pullRefresh(state)) {
@@ -124,14 +125,14 @@ class MainActivity : ComponentActivity() {
                     PullRefreshIndicator(refreshing, state, Modifier.align(Alignment.TopCenter))
                 }
                 */
-                /*
+                ///*
                 // mb better use scaffold
                 Column {
                     CenterAlignedTopAppBar()
                     PlaceOnSurface { Scr(viewModel) }
                 }
 
-                 */
+                //*/
 
                 //CenterAlignedTopAppBar({ PlaceOnSurface{ Scr(viewModel) } })
                 /*
@@ -294,6 +295,34 @@ fun screen{
 fun Scr(viewModel: MainViewModel) {
     val activeTab = viewModel.activeTab.observeAsState()
 
+    val refreshScope = rememberCoroutineScope()
+    var refreshing by remember { mutableStateOf(false) }
+    var itemCount by remember { mutableIntStateOf(6) }
+
+    fun refresh() = refreshScope.launch {
+        refreshing = true
+        delay(1500)
+        itemCount = itemCount + 5
+        refreshing = false
+    }
+
+    val state = rememberPullRefreshState(refreshing, ::refresh)
+
+    //DraggableCardsColumn(viewModel)
+
+    /*
+    Box(Modifier.pullRefresh(state)) {
+        LazyColumn(Modifier.fillMaxSize()) {
+            if (!refreshing) {
+                items(itemCount) {
+                    ListItem(headlineText = { Text(text = "Item ${itemCount - it}") })
+                }
+            }
+        }
+
+        PullRefreshIndicator(refreshing, state, Modifier.align(Alignment.TopCenter))
+    }
+    */
     Column {
         val coroutineScope = rememberCoroutineScope()
         val pagerState = rememberPagerState()
@@ -330,11 +359,26 @@ fun Scr(viewModel: MainViewModel) {
             if (page == 0) {
                 CamItem()
             } else if (page == 1) {
+                Box(Modifier.pullRefresh(state)) {
+                    DraggableCardsColumn(viewModel, refreshing)
+                    /*
+                    LazyColumn(Modifier.fillMaxSize()) {
+                        if (!refreshing) {
+                            items(itemCount) {
+                                DoorItem()
+                            }
+                        }
+                    }
+*/
+                    PullRefreshIndicator(refreshing, state, Modifier.align(Alignment.TopCenter))
+                }
+                /*
                 LazyColumn {
                     items(6) {
                         DoorItem()
                     }
                 }
+                */
             }
         }
 
