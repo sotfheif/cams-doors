@@ -5,5 +5,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class CamsResponseData(
     val room: List<String>,
-    val cameras: List<Cam>
+    val cameras: List<CamFromResp>
     )

@@ -11,7 +11,7 @@ private const val DOORS_URL = "http://cars.cprogroup.ru/api/rubetek/doors/"
 private const val TEST_URL = "https://catfact.ninja/fact"
 
 interface CamsDoorsRepository {
-    suspend fun getCamsDoors(): Pair<List<Cam>, List<Door>>
+    suspend fun getCamsDoors(): Pair<List<CamFromResp>, List<DoorFromResp>>
     //suspend fun getCams(): List<Cam>
     //suspend fun getDoors(): List<Door>
     //suspend fun getCamsResponse(): CamsResponse
@@ -19,9 +19,9 @@ interface CamsDoorsRepository {
 }
 
 class NetworkCamsDoorsRepository(private val client: HttpClient) : CamsDoorsRepository {
-    override suspend fun getCamsDoors(): Pair<List<Cam>, List<Door>> {
-        lateinit var cams: List<Cam>
-        lateinit var doors: List<Door>
+    override suspend fun getCamsDoors(): Pair<List<CamFromResp>, List<DoorFromResp>> {
+        lateinit var cams: List<CamFromResp>
+        lateinit var doors: List<DoorFromResp>
         client.use {
 
             val doorsResponse: DoorsResponse? = it.get(DOORS_URL).body()

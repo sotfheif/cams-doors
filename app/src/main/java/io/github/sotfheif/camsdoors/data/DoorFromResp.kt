@@ -3,11 +3,10 @@ package io.github.sotfheif.camsdoors.data
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Cam(
+data class DoorFromResp(
     val name: String,
-    val snapshot: String,
+    val snapshot: String = "",
     val room: String?,
     val id: Int,
-    val favorites: Boolean,
-    val rec: Boolean
+    val favorites: Boolean
 )

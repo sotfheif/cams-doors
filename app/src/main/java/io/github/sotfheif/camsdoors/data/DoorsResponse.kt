@@ -5,5 +5,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class DoorsResponse(
     val success: Boolean,
-    val data: List<Door>
+    val data: List<DoorFromResp>
     )

@@ -30,15 +30,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.pullrefresh.PullRefreshIndicator
-import androidx.compose.material3.pullrefresh.pullRefresh
 import androidx.compose.material3.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -61,6 +58,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModelProvider
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import io.github.sotfheif.camsdoors.compose.CardsScreen
 import io.github.sotfheif.camsdoors.data.CamsDoorsRepository
 import io.github.sotfheif.camsdoors.ui.theme.Black
 import io.github.sotfheif.camsdoors.ui.theme.CamsdoorsTheme
@@ -111,6 +109,9 @@ class MainActivity : ComponentActivity() {
 
                 val state = rememberPullRefreshState(refreshing, ::refresh)
 
+                CardsScreen(viewModel)
+
+                /*
                 Box(Modifier.pullRefresh(state)) {
                     LazyColumn(Modifier.fillMaxSize()) {
                         if (!refreshing) {
@@ -122,6 +123,7 @@ class MainActivity : ComponentActivity() {
 
                     PullRefreshIndicator(refreshing, state, Modifier.align(Alignment.TopCenter))
                 }
+                */
                 /*
                 // mb better use scaffold
                 Column {
