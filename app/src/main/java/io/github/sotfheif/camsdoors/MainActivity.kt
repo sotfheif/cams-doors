@@ -1,4 +1,3 @@
-//TODO UNABLE TO SCROLL
 //todo add elevation or shadow to tabrow indicator
 //todo review markup (like paddings)
 
