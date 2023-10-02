@@ -14,18 +14,13 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -34,7 +29,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.pullrefresh.PullRefreshIndicator
 import androidx.compose.material3.pullrefresh.pullRefresh
 import androidx.compose.material3.pullrefresh.rememberPullRefreshState
@@ -49,24 +43,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModelProvider
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
 import io.github.sotfheif.camsdoors.compose.DraggableCardsColumn
 import io.github.sotfheif.camsdoors.data.CamsDoorsRepository
 import io.github.sotfheif.camsdoors.ui.theme.Black
 import io.github.sotfheif.camsdoors.ui.theme.CamsdoorsTheme
-import io.github.sotfheif.camsdoors.ui.theme.Grey10
-import io.github.sotfheif.camsdoors.ui.theme.Grey20
-import io.github.sotfheif.camsdoors.ui.theme.Grey50
 import io.github.sotfheif.camsdoors.ui.theme.LightGrey
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -74,9 +57,9 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
-private const val TEST_IMAGE_URL =
+const val TEST_IMAGE_URL =
     "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Cat_poster_1.jpg/1280px-Cat_poster_1.jpg"
-private const val TEST_IMAGE_URL2 =
+const val TEST_IMAGE_URL2 =
     "https://serverspace.ru/wp-content/uploads/2019/06/backup-i-snapshot.png"
 
 
@@ -91,6 +74,7 @@ class MainActivity : ComponentActivity() {
         val app = (application as CamsDoorsApplication)
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
         val camsDoorsRepository = app.container.camsDoorsRepository
+        viewModel.loadUiData(camsDoorsRepository)
         req(camsDoorsRepository)
 
 
@@ -184,96 +168,6 @@ fun PlaceOnSurface(content: @Composable () -> Unit) {
     }
 }
 
-
-@Composable
-@OptIn(ExperimentalMaterial3Api::class)
-fun CenterAlignedTopAppBar() {
-    CenterAlignedTopAppBar(
-        colors = TopAppBarDefaults.smallTopAppBarColors(
-            containerColor = LightGrey,
-            titleContentColor = Grey10,
-        ),
-        title = {
-            Text(
-                "Мой дом",
-                maxLines = 1,
-            )
-        },
-    )
-}
-
-@Composable
-fun CamItem() {
-    Surface(
-        shape = RoundedCornerShape(16.dp),
-        //color = MaterialTheme.colorScheme.surface
-    ) {
-        Column {
-            ItemImage(TEST_IMAGE_URL2)
-
-            Text(
-                text = "camIt",
-                //color = MaterialTheme.colorScheme.background
-            )
-        }
-    }
-}
-
-@Composable
-fun DoorItem() {
-    Surface(
-        shape = RoundedCornerShape(16.dp),
-        color = Color.White,
-        modifier = Modifier
-            .padding(horizontal = 12.dp, vertical = 4.dp)
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-            //.padding(10.dp)
-        ) {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(7.dp),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                ItemImageTest(TEST_IMAGE_URL)
-                Box(
-                    modifier = Modifier
-                        .padding(7.dp)
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                    ) {
-                        Column(
-                            //verticalArrangement = Arrangement.spacedBy(0.dp),
-                        ) {
-                            Text(
-                                text = "doorIt",
-                                color = Grey50,
-                                //color = MaterialTheme.colorScheme.background,
-                                modifier = Modifier
-                            )
-                            Text(
-                                text = "doorIt",
-                                color = Grey20,
-                                fontSize = 14.sp,
-                                //.modifier = Modifier
-                                //.wrapContentSize(unbounded = true),
-                            )
-                        }
-                    }
-                    Box(
-                        modifier = Modifier
-                            .align(Alignment.CenterEnd)
-                    ) {
-                        LockImage()
-                    }
-                }
-            }
-        }
-    }
-}
 /*
 @Composable
 fun screen{
@@ -357,9 +251,6 @@ fun Scr(viewModel: MainViewModel) {
             beyondBoundsPageCount = 1,
             userScrollEnabled = false,
         ) { page ->
-            if (page == 0) {
-                CamItem()
-            } else if (page == 1) {
                 Box(
                     Modifier.pullRefresh(state)
                         .clipToBounds()
@@ -387,7 +278,6 @@ fun Scr(viewModel: MainViewModel) {
                     }
                 }
                 */
-            }
         }
 
         Button(
@@ -406,45 +296,7 @@ fun Scr(viewModel: MainViewModel) {
     }
 }
 
-@Composable
-fun ItemImage(url: String) {
-    AsyncImage(
-        model = ImageRequest.Builder(LocalContext.current)
-            .data(url)
-            .crossfade(true)
-            .build(),
-        //placeholder = painterResource(R.drawable.placeholder),
-        contentDescription = stringResource(R.string.item_image_desc),
-        modifier = Modifier.fillMaxWidth(),
-        //contentScale = ContentScale.Crop,
-    )
-}
 
-@Composable
-fun ItemImageTest(th: String = "") {
-    Box {
-        Image(
-            painter = painterResource(R.drawable.test_img_2),
-            contentDescription = null,
-            contentScale = ContentScale.FillWidth,
-            modifier = Modifier.fillMaxWidth(),
-            //.size(40.dp)
-        )
-        Image(
-            painter = painterResource(R.drawable.play_button),
-            contentDescription = null,
-            modifier = Modifier.align(Alignment.Center)
-                .size(70.dp),
-        )
-        Image(
-            painter = painterResource(R.drawable.filled_star),
-            contentDescription = null,
-            modifier = Modifier.align(Alignment.TopEnd)
-                .padding(4.dp)
-                .size(28.dp),
-        )
-    }
-}
 
 fun req(camsDoorsRepository: CamsDoorsRepository) {
     val scope = CoroutineScope(Dispatchers.Main)
@@ -453,16 +305,6 @@ fun req(camsDoorsRepository: CamsDoorsRepository) {
     }
 }
 
-@Composable
-fun LockImage(isLocked: Boolean = false) {
-    val res = if (isLocked) R.drawable.lock_on else R.drawable.lock_off
-    Image(
-        painter = painterResource(res),
-        contentDescription = null,
-        modifier = Modifier.size(45.dp)
-            .padding(horizontal = 10.dp)
-    )
-}
 
 @Preview(showBackground = true)
 @Composable
@@ -471,7 +313,7 @@ fun DoorItemPreview() {
         Surface(
             color = MaterialTheme.colorScheme.background
         ) {
-            DoorItem()
+            //DoorItem()
         }
     }
 }

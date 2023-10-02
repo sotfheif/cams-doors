@@ -2,9 +2,9 @@ package io.github.sotfheif.camsdoors.data
 
 fun transformRemoteDataToUniformData(
     remoteData: Pair<List<CamFromResp>, List<DoorFromResp>>
-): List<CardDb> {
-    return remoteData.first.map { transformCamFromRespToCardDb(it) } +
-            remoteData.second.map { transformDoorFromRespToCardDb(it) }
+): Pair<List<CardDb>, List<CardDb>> {
+    return Pair(remoteData.first.map { transformCamFromRespToCardDb(it) },
+        remoteData.second.map { transformDoorFromRespToCardDb(it) })
 }
 
 fun transformCamFromRespToCardDb(camFromResp: CamFromResp): CardDb {

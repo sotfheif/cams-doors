@@ -18,7 +18,6 @@ import androidx.compose.ui.input.pointer.positionChange
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import io.github.sotfheif.camsdoors.DoorItem
 import io.github.sotfheif.camsdoors.data.CardDb
 import kotlin.math.roundToInt
 

@@ -14,13 +14,13 @@ import io.github.sotfheif.camsdoors.MainViewModel
 import io.github.sotfheif.camsdoors.data.CardDb
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
-
+const val ACTION_ITEM_COUNT = 2
 const val ACTION_ITEM_SIZE = 56
-const val CARD_OFFSET = 168f // we have 3 icons in a row, so that's 56 * 3
+const val CARD_OFFSET = 1f * ACTION_ITEM_COUNT * ACTION_ITEM_SIZE
 
 @ExperimentalCoroutinesApi
 @Composable
-fun DraggableCardsColumn(viewModel: MainViewModel, refreshing: Boolean) {
+fun DraggableCardsColumn(viewModel: MainViewModel, refreshing: Boolean, pageNum: Int) {
     val cards by viewModel.cards.observeAsState()
     val revealedCardIds by viewModel.revealedCardIdsList.observeAsState()
 

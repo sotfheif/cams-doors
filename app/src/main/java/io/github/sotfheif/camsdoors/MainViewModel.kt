@@ -4,11 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import io.github.sotfheif.camsdoors.data.CamFromResp
 import io.github.sotfheif.camsdoors.data.CamsDoorsRepository
 import io.github.sotfheif.camsdoors.data.CardDb
-import io.github.sotfheif.camsdoors.data.DoorFromResp
 import io.github.sotfheif.camsdoors.data.getCardDbStub
+import io.github.sotfheif.camsdoors.data.transformRemoteDataToUniformData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -26,11 +25,11 @@ class MainViewModel : ViewModel() {
     private val _cards = MutableLiveData(listOf<CardDb>())
     val cards: LiveData<List<CardDb>> get() = _cards
 
-    private val _camsUi = MutableLiveData(listOf<CamFromResp>())
-    val camsUi: LiveData<List<CamFromResp>> get() = _camsUi
+    private val _camsUi = MutableLiveData(listOf<CardDb>())
+    val camsUi: LiveData<List<CardDb>> get() = _camsUi
 
-    private val _doorsUi = MutableLiveData(listOf<DoorFromResp>())
-    val doorsUi: LiveData<List<DoorFromResp>> get() = _doorsUi
+    private val _doorsUi = MutableLiveData(listOf<CardDb>())
+    val doorsUi: LiveData<List<CardDb>> get() = _doorsUi
 
     private val _revealedCardIdsList = MutableLiveData(listOf<Int>())
     val revealedCardIdsList: LiveData<List<Int>> get() = _revealedCardIdsList
@@ -65,21 +64,22 @@ class MainViewModel : ViewModel() {
 
     fun loadUiData(repository: CamsDoorsRepository) {
         viewModelScope.launch {
-            val uiData = getRemoteData(repository)
+            val remoteData = getRemoteData(repository)
+            val uiData = transformRemoteDataToUniformData(remoteData)
             updateDataInUi(uiData)
         }
     }
 
-    fun updateDataInUi(uiData: Pair<List<CamFromResp>, List<DoorFromResp>>) {
+    fun updateDataInUi(uiData: Pair<List<CardDb>, List<CardDb>>) {
         updateCamsInUi(uiData.first)
         updateDoorsInUi(uiData.second)
     }
 
-    fun updateCamsInUi(camsUiData: List<CamFromResp>) {
+    fun updateCamsInUi(camsUiData: List<CardDb>) {
         _camsUi.value = camsUiData
     }
 
-    fun updateDoorsInUi(doorsUiData: List<DoorFromResp>) {
+    fun updateDoorsInUi(doorsUiData: List<CardDb>) {
         _doorsUi.value = doorsUiData
     }
 
